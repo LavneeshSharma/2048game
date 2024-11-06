@@ -256,11 +256,9 @@ function showDialog(gameState) {
     dialogOverlay.className = 'dialog-overlay';
     
     const dialogBox = document.createElement('div');
-    dialogBox.className = 'dialog-box';
-    
+    dialogBox.className = 'dialog-box';    
     const message = document.createElement('p');
     message.textContent = gameState === "win" ? "Congratulations! You've reached 2048!" : "Game over. No more moves available.";
-    
     const closeButton = document.createElement('button');
     closeButton.textContent = 'Close';
     closeButton.addEventListener('click', () => {
@@ -291,7 +289,6 @@ function showDialog(gameState) {
         dialogBox.style.transform = 'scale(1)';
     }, 10);
 }
-
 document.addEventListener('DOMContentLoaded', () => {
     const newGameButton = document.getElementById("new-game");
     if (newGameButton) {
