@@ -334,3 +334,32 @@ h1 {
         font-size: 1.5rem;
     }
 }
+#undo-button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+  }
+
+  #undo-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .light-theme #undo-button {
+    background-color: #8f7a66;
+    color: #f9f6f2;
+  }
+
+  .dark-theme #undo-button {
+    background-color: #4a4a4a;
+    color: #f9f6f2;
+  }
+
+  #undo-button:hover:not(:disabled) {
+    transform: scale(1.05);
+  }
