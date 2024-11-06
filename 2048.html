@@ -1,0 +1,34 @@
+<html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>2048 Game</title>
+        <link rel="stylesheet" href="2048.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+      </head>
+      <body>
+        <div class="background"></div>
+<div class="container">
+    <h1>2048</h1>
+    <div class="game-info">
+        <div class="score-container">
+            Score
+            <span id="score">0</span>
+        </div>
+        <button id="new-game">New Game</button>
+    </div>
+    <div id="board">
+        <div id="game-over" class="game-over hidden">
+            <h2 id="game-over-text"></h2>
+            <button id="play-again">Play Again</button>
+        </div>
+    </div>
+</div>
+        <script src="2048.js"></script>
+      </body>
+      <div class="theme-toggle">
+        <button id="moon-button" class="theme-button">
+            <img src="images/moon.png" alt="Dark mode" class="moon-icon">
+        </button>
+    </div>
+    </html>
