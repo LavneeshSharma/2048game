@@ -10,12 +10,12 @@ window.onload = function() {
     setupSwipeControls();
 }
 
-// Set up the theme toggle button
 function setupThemeSystem() {
-    const moonButton = document.getElementById('moon-button');
+    const themeToggle = document.getElementById('themeToggle');
     document.body.classList.add('light-theme');
-    moonButton.addEventListener('click', () => {
-        if (currentTheme === 'light') {
+    
+    themeToggle.addEventListener('change', () => {
+        if (themeToggle.checked) {
             document.body.classList.remove('light-theme');
             document.body.classList.add('dark-theme');
             currentTheme = 'dark';
@@ -28,7 +28,6 @@ function setupThemeSystem() {
     });
 }
 
-// Update all tiles based on the theme
 function updateAllTiles() {
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < columns; c++) {
@@ -39,7 +38,6 @@ function updateAllTiles() {
     }
 }
 
-// Initialize the game board and setup initial tiles
 function setGame() {
     board = Array.from({ length: rows }, () => Array(columns).fill(0));
     score = 0;
@@ -59,7 +57,6 @@ function setGame() {
     setTwo();
 }
 
-// Update tile appearance based on the number value
 function updateTile(tile, num) {
     tile.innerText = "";
     tile.classList.value = ""; 
@@ -70,12 +67,10 @@ function updateTile(tile, num) {
     }
 }
 
-// Update score display
 function updateScore() {
     document.getElementById("score").innerText = score;
 }
 
-// Handle keyboard arrow input
 document.addEventListener('keyup', handleInput);
 function handleInput(e) {
     if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.code)) {
@@ -83,7 +78,6 @@ function handleInput(e) {
     }
 }
 
-// Swipe Controls for mobile
 function setupSwipeControls() {
     let startX, startY;
     document.addEventListener("touchstart", (e) => {
@@ -93,7 +87,6 @@ function setupSwipeControls() {
     document.addEventListener("touchend", (e) => {
         let deltaX = e.changedTouches[0].clientX - startX;
         let deltaY = e.changedTouches[0].clientY - startY;
-
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
             processMove(deltaX > 0 ? "ArrowRight" : "ArrowLeft");
         } else {
@@ -102,7 +95,6 @@ function setupSwipeControls() {
     });
 }
 
-// Process the board after a move
 function processMove(direction) {
     let moved = false;
     if (direction === "ArrowLeft") moved = slideLeft();
@@ -120,12 +112,10 @@ function processMove(direction) {
     updateScore();
 }
 
-// Filter out zeros from the row
 function filterZero(row) {
     return row.filter(num => num !== 0);
 }
 
-// Slide tiles in the row
 function slide(row) {
     row = filterZero(row);
     for (let i = 0; i < row.length - 1; i++) {
@@ -142,7 +132,6 @@ function slide(row) {
     return row;
 }
 
-// Move tiles left
 function slideLeft() {
     let moved = false;
     for (let r = 0; r < rows; r++) {
@@ -158,7 +147,6 @@ function slideLeft() {
     return moved;
 }
 
-// Move tiles right
 function slideRight() {
     let moved = false;
     for (let r = 0; r < rows; r++) {
@@ -176,7 +164,6 @@ function slideRight() {
     return moved;
 }
 
-// Move tiles up
 function slideUp() {
     let moved = false;
     for (let c = 0; c < columns; c++) {
@@ -194,7 +181,6 @@ function slideUp() {
     return moved;
 }
 
-// Move tiles down
 function slideDown() {
     let moved = false;
     for (let c = 0; c < columns; c++) {
@@ -218,21 +204,18 @@ function arraysEqual(a, b) {
     return a.every((val, index) => val === b[index]);
 }
 
-// Helper to update a single row visually
 function updateRow(r) {
     for (let c = 0; c < columns; c++) {
         updateTile(document.getElementById(r + "-" + c), board[r][c]);
     }
 }
 
-// Helper to update a single column visually
 function updateColumn(c) {
     for (let r = 0; r < rows; r++) {
         updateTile(document.getElementById(r + "-" + c), board[r][c]);
     }
 }
 
-// Add a new tile with '2' on an empty spot
 function setTwo() {
     if (!hasEmptyTile()) return;
     let found = false;
@@ -247,12 +230,10 @@ function setTwo() {
     }
 }
 
-// Check if there's an empty tile
 function hasEmptyTile() {
     return board.some(row => row.includes(0));
 }
 
-// Check game state for win or lose
 function checkGameState() {
     if (board.flat().includes(2048)) return "win";
     if (hasEmptyTile()) return "continue";
@@ -265,13 +246,11 @@ function checkGameState() {
     return "lose";
 }
 
-// End game display
 function endGame(gameState) {
     document.removeEventListener('keyup', handleInput);
     showDialog(gameState);
 }
 
-// Show dialog box for game end
 function showDialog(gameState) {
     const dialogOverlay = document.createElement('div');
     dialogOverlay.className = 'dialog-overlay';
@@ -300,10 +279,19 @@ function showDialog(gameState) {
     dialogBox.appendChild(closeButton);
     dialogBox.appendChild(newGameButton);
     dialogOverlay.appendChild(dialogBox);
+    if (currentTheme === 'dark') {
+        dialogBox.classList.add('dark-theme');
+    } else {
+        dialogBox.classList.add('light-theme');
+    }
+    
     document.body.appendChild(dialogOverlay);
+    setTimeout(() => {
+        dialogBox.style.opacity = '1';
+        dialogBox.style.transform = 'scale(1)';
+    }, 10);
 }
 
-// New game button setup
 document.addEventListener('DOMContentLoaded', () => {
     const newGameButton = document.getElementById("new-game");
     if (newGameButton) {

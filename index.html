@@ -1,34 +1,50 @@
+<!DOCTYPE html>
 <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>2048 Game</title>
-        <link rel="stylesheet" href="2048.css" />
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
-      </head>
-      <body>
-        <div class="background"></div>
-<div class="container">
-    <h1>2048</h1>
-    <div class="game-info">
-        <div class="score-container">
-            Score
-            <span id="score">0</span>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2048 Game</title>
+    <link rel="stylesheet" href="2048.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+    <div class="background"></div>
+    <div class="container">
+        <h1>2048</h1>
+        <div class="game-info">
+            <div class="score-container">
+                Score
+                <span id="score">0</span>
+            </div>
+            <button id="new-game">New Game</button>
         </div>
-        <button id="new-game">New Game</button>
-    </div>
-    <div id="board">
-        <div id="game-over" class="game-over hidden">
-            <h2 id="game-over-text"></h2>
-            <button id="play-again">Play Again</button>
+        <div id="board">
+            <div id="game-over" class="game-over hidden">
+                <h2 id="game-over-text"></h2>
+                <button id="play-again">Play Again</button>
+            </div>
         </div>
     </div>
-</div>
-        <script src="2048.js"></script>
-      </body>
-      <div class="theme-toggle">
-        <button id="moon-button" class="theme-button">
-            <img src="images/moon.png" alt="Dark mode" class="moon-icon">
-        </button>
+    <div class="theme-toggle">
+        <label for="themeToggle" class="themeToggle st-sunMoonThemeToggleBtn">
+            <input type="checkbox" id="themeToggle" class="themeToggleInput" />
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                <mask id="moon-mask">
+                    <rect x="0" y="0" width="200" height="20" fill="white"></rect>
+                    <circle cx="11" cy="3" r="8" fill="black"></circle>
+                </mask>
+                <circle class="sunMoon" cx="10" cy="10" r="8" mask="url(#moon-mask)"></circle>
+                <g>
+                    <circle class="sunRay sunRay1" cx="18" cy="10" r="1.5"></circle>
+                    <circle class="sunRay sunRay2" cx="14" cy="16.928" r="1.5"></circle>
+                    <circle class="sunRay sunRay3" cx="6" cy="16.928" r="1.5"></circle>
+                    <circle class="sunRay sunRay4" cx="2" cy="10" r="1.5"></circle>
+                    <circle class="sunRay sunRay5" cx="6" cy="3.1718" r="1.5"></circle>
+                    <circle class="sunRay sunRay6" cx="14" cy="3.1718" r="1.5"></circle>
+                </g>
+            </svg>
+        </label>
     </div>
-    </html>
+    <script src="2048.js"></script>
+</body>
+</html>
