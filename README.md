@@ -8,14 +8,11 @@
 
 **Key Features:**
 
-* **Undo Moves:** Made a mistake? No problem! Undo your last move and try again.
 * **Responsive Design:** Play on any device, from desktop to mobile, with a seamless experience.
 * **Theme Options:** Choose between light and dark themes to suit your preferences.
 * **Smooth Animations:** Enjoy fluid animations that enhance the gameplay experience.
 
 **Let's Play!** 🕹️
-
-[Image of 2048 game screenshot]
 
 **Ready to challenge your mind?** Start playing now and see how far you can go! 
 
