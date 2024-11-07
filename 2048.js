@@ -6,12 +6,14 @@ let board;
       let previousBoard;
       let previousScore;
       let undoAvailable = false;
-
+      let leaderboard = [];
       window.onload = function() {
         setGame();
         setupThemeSystem();
         setupSwipeControls();
         setupUndoButton();
+        loadLeaderboard();
+        updateLeaderboardDisplay();
       }
 
       function setupThemeSystem() {
@@ -254,93 +256,160 @@ let board;
         }
         return "lose";
       }
-
-      function endGame(gameState) {
+    function endGame(gameState) {
         document.removeEventListener('keyup', handleInput);
-        showDialog(gameState);
+        showNameInputDialog(gameState);
       }
 
-      function showDialog(gameState) {
+      function showNameInputDialog(gameState) {
         const dialogOverlay = document.createElement('div');
-        dialogOverlay.className = 'dialog-overlay';
+        dialogOverlay.className = 'dialog-overlay show';
         
-        const dialogBox = document.createElement('div');
-        dialogBox.className = 'dialog-box';
+        const nameInputDialog = document.createElement('div');
+        nameInputDialog.className = 'name-input-dialog';
         
         const message = document.createElement('p');
         message.textContent = gameState === "win" ? "Congratulations! You've reached 2048!" : "Game over. No more moves available.";
         
-        const closeButton = document.createElement('button');
-        closeButton.textContent = 'Close';
-        closeButton.addEventListener('click', () => {
-          document.body.removeChild(dialogOverlay);
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.placeholder = 'Enter your name';
+        
+        const submitButton = document.createElement('button');
+        submitButton.textContent = 'Submit Score';
+        submitButton.addEventListener('click', () => {
+          const playerName = nameInput.value.trim();
+          if (playerName) {
+            updateLeaderboard(playerName, score);
+            document.body.removeChild(dialogOverlay);
+            showLeaderboardDialog();
+          }
         });
         
-        const newGameButton = document.createElement('button');
-        newGameButton.textContent = 'New Game';
-        newGameButton.addEventListener('click', () => {
-          document.body.removeChild(dialogOverlay);
-          setGame();
-          document.addEventListener('keyup', handleInput);
-        });
-        
-        dialogBox.appendChild(message);
-        dialogBox.appendChild(closeButton);
-        dialogBox.appendChild(newGameButton);
-        dialogOverlay.appendChild(dialogBox);
+        nameInputDialog.appendChild(message);
+        nameInputDialog.appendChild(nameInput);
+        nameInputDialog.appendChild(submitButton);
+        dialogOverlay.appendChild(nameInputDialog);
         
         if (currentTheme === 'dark') {
-          dialogBox.classList.add('dark-theme');
-        } else {
-          dialogBox.classList.add('light-theme');
+          nameInputDialog.classList.add('dark-theme');
         }
         
         document.body.appendChild(dialogOverlay);
-
-        setTimeout(() => {
-          dialogBox.style.opacity = '1';
-          dialogBox.style.transform = 'scale(1)';
-        }, 10);
       }
-
-      function setupUndoButton() {
-        const undoButton = document.getElementById('undo-button');
-        undoButton.addEventListener('click', undo);
+  
+      function updateLeaderboard(playerName, playerScore) {
+        leaderboard.push({ name: playerName, score: playerScore });
+        leaderboard.sort((a, b) => b.score - a.score);
+        leaderboard = leaderboard.slice(0, 3); // Keep only top 3 scores
+        saveLeaderboard();
+        updateLeaderboardDisplay();
       }
-
-      function saveBoardState() {
-        previousBoard = board.map(row => [...row]);
-        previousScore = score;
+  
+      function saveLeaderboard() {
+        localStorage.setItem('2048-leaderboard', JSON.stringify(leaderboard));
       }
-
-      function undo() {
-        if (undoAvailable) {
-          board = previousBoard;
-          score = previousScore;
-          updateAllTiles();
-          updateScore();
-          resetUndo();
+  
+      function loadLeaderboard() {
+        const savedLeaderboard = localStorage.getItem('2048-leaderboard');
+        if (savedLeaderboard) {
+          leaderboard = JSON.parse(savedLeaderboard);
         }
       }
-
-      function enableUndo() {
-        if (!undoAvailable) {
-          undoAvailable = true;
-          document.getElementById('undo-button').disabled = false;
-        }
-      }
-
-      function resetUndo() {
-        undoAvailable = false;
-        document.getElementById('undo-button').disabled = true;
-      }
-
-      document.addEventListener('DOMContentLoaded', () => {
-        const newGameButton = document.getElementById("new-game");
-        if (newGameButton) {
-          newGameButton.addEventListener("click", () => {
-            setGame();
-            document.addEventListener('keyup', handleInput);
-          });
-        }
-      });
+  
+      function updateLeaderboardDisplay() {
+        const leaderboardList = document.getElementById('leaderboard-list');
+        const leaderboardDialogList = document.getElementById('leaderboard-dialog-list');
+      
+        leaderboardList.innerHTML = '';
+        leaderboardDialogList.innerHTML = '';
+      
+        leaderboard.forEach((entry, index) => {
+          const li = document.createElement('li');
+          const dialogLi = document.createElement('li');
+      
+          switch (index) {
+            case 0:
+              li.innerHTML = `<span style="color: gold; font-weight: bold;">🥇</span> ${entry.name}: ${entry.score}`;
+              dialogLi.innerHTML = `<span style="color: gold; font-weight: bold;">🥇 Gold</span> ${entry.name}: ${entry.score}`;
+                break;
+            case 1:
+              li.innerHTML = `<span style="color: silver; font-weight: bold;">🥈</span> ${entry.name}: ${entry.score}`;
+              dialogLi.innerHTML = `<span style="color: silver; font-weight: bold;">🥈 Silver</span> ${entry.name}: ${entry.score}`;
+              break;
+              case 2:
+                li.innerHTML = `<span style="color: #cd7f32; font-weight: bold;">🥉</span> ${entry.name}: ${entry.score}`;
+                dialogLi.innerHTML = `<span style="color: #cd7f32; font-weight: bold;">🥉 Bronze</span> ${entry.name}: ${entry.score}`;
+                break;
+              default:
+                li.textContent = `${entry.name}: ${entry.score}`;
+                dialogLi.textContent = `${entry.name}: ${entry.score}`;
+                break;
+              }
+              
+              // Append to leaderboard lists
+              leaderboardList.appendChild(li);
+              leaderboardDialogList.appendChild(dialogLi);
+              });
+              }
+              
+              function showLeaderboardDialog() {
+                const dialogOverlay = document.querySelector('.dialog-overlay');
+                const dialogBox = document.querySelector('.dialog-box');
+                dialogOverlay.classList.add('show');
+                dialogBox.classList.add('show');
+              }
+              
+              // Show leaderboard dialog on button click
+              document.querySelector('.leaderboard').addEventListener('click', showLeaderboardDialog);
+              
+              // Close leaderboard dialog
+              document.getElementById('close-dialog').addEventListener('click', () => {
+                const dialogOverlay = document.querySelector('.dialog-overlay');
+                const dialogBox = document.querySelector('.dialog-box');
+                dialogOverlay.classList.remove('show');
+                dialogBox.classList.remove('show');
+              });
+              
+              function setupUndoButton() {
+                const undoButton = document.getElementById('undo-button');
+                undoButton.addEventListener('click', undo);
+              }
+              
+              function saveBoardState() {
+                previousBoard = board.map(row => [...row]);
+                previousScore = score;
+              }
+              
+              function undo() {
+                if (undoAvailable) {
+                  board = previousBoard;
+                  score = previousScore;
+                  updateAllTiles();
+                  updateScore();
+                  resetUndo();
+                }
+              }
+              
+              function enableUndo() {
+                if (!undoAvailable) {
+                  undoAvailable = true;
+                  document.getElementById('undo-button').disabled = false;
+                }
+              }
+              
+              function resetUndo() {
+                undoAvailable = false;
+                document.getElementById('undo-button').disabled = true;
+              }
+              
+              document.addEventListener('DOMContentLoaded', () => {
+                const newGameButton = document.getElementById("new-game");
+                if (newGameButton) {
+                  newGameButton.addEventListener("click", () => {
+                    setGame();
+                    document.addEventListener('keyup', handleInput);
+                  });
+                }
+              });
+              
