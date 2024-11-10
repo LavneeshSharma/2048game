@@ -374,11 +374,14 @@ let board;
               
               function setupUndoButton() {
                 const undoButton = document.getElementById('undo-button');
-                undoButton.addEventListener('click', undo);
-                undoButton.addEventListener('touchend', (e) => {
-                  e.preventDefault(); // Prevent default touch behavior
+                function handleUndo(e) {
+                  e.preventDefault(); // Prevent default behavior for both click and touch events
+                  if (!undoAvailable) return; // Exit early if undo is not available
                   undo();
-                });
+                }
+          
+                undoButton.addEventListener('click', handleUndo);
+                undoButton.addEventListener('touchend', handleUndo);
               }
               
               function saveBoardState() {
