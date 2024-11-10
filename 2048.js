@@ -1,13 +1,13 @@
 let board;
-      let score = 0;
-      let rows = 4;
-      let columns = 4;
-      let currentTheme = 'light';
-      let previousBoard;
-      let previousScore;
-      let undoAvailable = false;
-      let leaderboard = [];
-      window.onload = function() {
+let score = 0;
+let rows = 4;
+let columns = 4;
+let currentTheme = 'light';
+let previousBoard;
+let previousScore;
+let undoAvailable = false;
+let leaderboard = [];
+window.onload = function() {
         setGame();
         setupThemeSystem();
         setupSwipeControls();
@@ -302,7 +302,7 @@ let board;
       function updateLeaderboard(playerName, playerScore) {
         leaderboard.push({ name: playerName, score: playerScore });
         leaderboard.sort((a, b) => b.score - a.score);
-        leaderboard = leaderboard.slice(0, 3); // Keep only top 3 scores
+        leaderboard = leaderboard.slice(0, 3); 
         saveLeaderboard();
         updateLeaderboardDisplay();
       }
@@ -348,7 +348,7 @@ let board;
                 break;
               }
               
-              // Append to leaderboard lists
+             
               leaderboardList.appendChild(li);
               leaderboardDialogList.appendChild(dialogLi);
               });
@@ -401,7 +401,7 @@ let board;
                   const touchEndTime = Date.now();
                   const touchDuration = touchEndTime - touchStartTime;
                   
-                  if (touchDuration < 200) { // Consider it a tap if the touch duration is less than 200ms
+                  if (touchDuration < 200) { 
                     handleUndo(e);
                   }
                 });
@@ -411,8 +411,8 @@ let board;
                 let touchStartTime;
                 
                 function handleUndo(e) {
-                  e.preventDefault(); // Prevent default behavior for both click and touch events
-                  if (!undoAvailable) return; // Exit early if undo is not available
+                  e.preventDefault(); 
+                  if (!undoAvailable) return; 
                   undo();
                 }
           
@@ -426,7 +426,7 @@ let board;
                   const touchEndTime = Date.now();
                   const touchDuration = touchEndTime - touchStartTime;
                   
-                  if (touchDuration < 200) { // Consider it a tap if the touch duration is less than 200ms
+                  if (touchDuration < 200) {
                     handleUndo(e);
                   }
                 });
