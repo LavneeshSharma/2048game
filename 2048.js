@@ -355,25 +355,61 @@ let board;
               }
               
               function showLeaderboardDialog() {
-                const dialogOverlay = document.querySelector('.dialog-overlay');
-                const dialogBox = document.querySelector('.dialog-box');
-                dialogOverlay.classList.add('show');
-                dialogBox.classList.add('show');
+                if (window.innerWidth <= 768) {
+                  showMobileLeaderboard();
+                } else {
+                  const dialogOverlay = document.createElement('div');
+                  dialogOverlay.className = 'dialog-overlay show';
+                  
+                  const dialogBox = document.createElement('div');
+                  dialogBox.className = 'dialog-box show';
+                  
+                  const title = document.createElement('h2');
+                  title.textContent = 'Global Leaderboard';
+                  
+                  const leaderboardList = document.createElement('ol');
+                  leaderboard.forEach((entry, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span class="rank">${index + 1}</span> ${entry.name}: ${entry.score}`;
+                    leaderboardList.appendChild(li);
+                  });
+                  const closeButton = document.createElement('button');
+                  closeButton.textContent = 'Close';
+                  closeButton.addEventListener('click', () => {
+                    document.body.removeChild(dialogOverlay);
+                  });
+                  
+                  dialogBox.appendChild(title);
+                  dialogBox.appendChild(leaderboardList);
+                  dialogBox.appendChild(closeButton);
+                  dialogOverlay.appendChild(dialogBox);
+                  
+                  if (currentTheme === 'dark') {
+                    dialogBox.classList.add('dark-theme');
+                  }
+                  
+                  document.body.appendChild(dialogOverlay);
+                }
+                
+                undoButton.addEventListener('click', handleUndo);
+                
+                undoButton.addEventListener('touchstart', (e) => {
+                  touchStartTime = Date.now();
+                });
+          
+                undoButton.addEventListener('touchend', (e) => {
+                  const touchEndTime = Date.now();
+                  const touchDuration = touchEndTime - touchStartTime;
+                  
+                  if (touchDuration < 200) { // Consider it a tap if the touch duration is less than 200ms
+                    handleUndo(e);
+                  }
+                });
               }
-              
-              // Show leaderboard dialog on button click
-              document.querySelector('.leaderboard').addEventListener('click', showLeaderboardDialog);
-              
-              // Close leaderboard dialog
-              document.getElementById('close-dialog').addEventListener('click', () => {
-                const dialogOverlay = document.querySelector('.dialog-overlay');
-                const dialogBox = document.querySelector('.dialog-box');
-                dialogOverlay.classList.remove('show');
-                dialogBox.classList.remove('show');
-              });
-              
               function setupUndoButton() {
                 const undoButton = document.getElementById('undo-button');
+                let touchStartTime;
+                
                 function handleUndo(e) {
                   e.preventDefault(); // Prevent default behavior for both click and touch events
                   if (!undoAvailable) return; // Exit early if undo is not available
@@ -381,8 +417,35 @@ let board;
                 }
           
                 undoButton.addEventListener('click', handleUndo);
-                undoButton.addEventListener('touchend', handleUndo);
+                
+                undoButton.addEventListener('touchstart', (e) => {
+                  touchStartTime = Date.now();
+                });
+          
+                undoButton.addEventListener('touchend', (e) => {
+                  const touchEndTime = Date.now();
+                  const touchDuration = touchEndTime - touchStartTime;
+                  
+                  if (touchDuration < 200) { // Consider it a tap if the touch duration is less than 200ms
+                    handleUndo(e);
+                  }
+                });
               }
+          
+              function addUndoButtonFeedback() {
+                const undoButton = document.getElementById('undo-button');
+                
+                function addActiveClass() {
+                  undoButton.classList.add('active');
+                  setTimeout(() => {
+                    undoButton.classList.remove('active');
+                  }, 200);
+                }
+          
+                undoButton.addEventListener('mousedown', addActiveClass);
+                undoButton.addEventListener('touchstart', addActiveClass);
+              }
+          
               
               function saveBoardState() {
                 previousBoard = board.map(row => [...row]);
