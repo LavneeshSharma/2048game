@@ -102,6 +102,7 @@ let board;
             saveBoardState();
             processMove(deltaY > 0 ? "ArrowDown" : "ArrowUp");
           }
+          enableUndo();
         });
       }
 
@@ -374,6 +375,10 @@ let board;
               function setupUndoButton() {
                 const undoButton = document.getElementById('undo-button');
                 undoButton.addEventListener('click', undo);
+                undoButton.addEventListener('touchend', (e) => {
+                  e.preventDefault(); // Prevent default touch behavior
+                  undo();
+                });
               }
               
               function saveBoardState() {
@@ -383,7 +388,7 @@ let board;
               
               function undo() {
                 if (undoAvailable) {
-                  board = previousBoard;
+                  board = previousBoard.map(row => [...row]);
                   score = previousScore;
                   updateAllTiles();
                   updateScore();
